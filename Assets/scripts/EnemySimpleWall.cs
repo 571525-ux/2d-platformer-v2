@@ -5,6 +5,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
     public LayerMask groundLayerMask;
     bool result;
     bool isGroundedLeft, isGroundedMiddle, isGroundedRight;
+    bool seeWallRight , seeWallLeft;
     Rigidbody2D rb;
     SpriteRenderer sr;
     Animator anim;
@@ -24,17 +25,26 @@ public class NewMonoBehaviourScript : MonoBehaviour
     void Update()
     {
 
-        isGroundedMiddle = RayCollisionCheck(0, 0);
+        
 
-        isGroundedLeft = RayCollisionCheck(-0.2f, 0);
 
-        isGroundedRight = RayCollisionCheck(0.2f, 0);
+        isGroundedMiddle = RayCollisionCheck(0, 0, Vector2.down);
 
-        if (isGroundedRight == false && (dirX > 0))
+        isGroundedLeft = RayCollisionCheck(-0.2f, 0, Vector2.down);
+
+        isGroundedRight = RayCollisionCheck(0.2f, 0, Vector2.down);
+
+         seeWallLeft = RayCollisionCheck(-0.2f, 0.2f, Vector2.left);
+
+        seeWallRight = RayCollisionCheck(0.2f, 0.2f, Vector2.right);
+
+
+        if (isGroundedRight == false || seeWallRight && (dirX > 0))
         {
 
             dirX = -2;
             print("walkingback");
+
 
             /* if (isGroundedRight == true)
              {
@@ -42,7 +52,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
              }
             */
         }
-        if (isGroundedLeft == false && (dirX < 0))
+        if (isGroundedLeft == false || seeWallLeft && (dirX < 0))
         {
 
             dirX = 2;
@@ -74,9 +84,9 @@ public class NewMonoBehaviourScript : MonoBehaviour
         }
     }
 
-    public bool RayCollisionCheck(float xoffs, float yoffs)
+    public bool RayCollisionCheck(float xoffs, float yoffs, Vector2 direction )
     {
-        float rayLength = 0.5f; // length of raycast
+        float rayLength = 0.25f; // length of raycast
         bool hitSomething = false;
 
         // convert x and y offset into a Vector3 
@@ -85,7 +95,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
         //cast a ray downward starting at the sprite's position
         RaycastHit2D hit;
 
-        hit = Physics2D.Raycast(transform.position + offset, Vector2.down, rayLength, groundLayerMask);
+        hit = Physics2D.Raycast(transform.position + offset, direction, rayLength, groundLayerMask);
 
         Color hitColor = Color.red;
 
@@ -98,7 +108,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
         }
         // draw a debug ray to show ray's position
         // You need to enable gizmos in th e editor to see these
-        Debug.DrawRay(transform.position + offset, Vector2.down * rayLength, hitColor);
+        Debug.DrawRay(transform.position + offset, direction * rayLength, hitColor);
         return hitSomething;
 
 
