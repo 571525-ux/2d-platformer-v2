@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CoinCollect : MonoBehaviour
+public class BlockBreak : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

@@ -13,12 +13,13 @@ public class playermovement : MonoBehaviour
     SpriteRenderer sr;
     bool isGrounded;
     Animator anim;  // ***
-    
+    HelperScript helper;
 
     public float speed = 5.0f;
 
     void Start()
     {
+        helper = gameObject.AddComponent<HelperScript>();
         //initialise the variables
         moveAction = InputSystem.actions.FindAction("Move");
         jumpAction = InputSystem.actions.FindAction("Jump");
@@ -37,6 +38,13 @@ public class playermovement : MonoBehaviour
     void Update()
     {
 
+        if (Keyboard.current.fKey.wasPressedThisFrame)
+        {
+            // helper.FlipSprite(true);
+            helper.destroyer();
+        }
+
+
         if (rb.linearVelocityX != 0)
         {
             anim.SetBool("walking", true);
@@ -54,25 +62,14 @@ public class playermovement : MonoBehaviour
         Vector2 moveVel = moveAction.ReadValue<Vector2>();
         rb.linearVelocity = new Vector2(moveVel.x * 4, rb.linearVelocity.y);
         Jump();
-        Flipsprite();
+        helper.FlipSprite();
         Crouch();
         
     }
     
 
 
-    void Flipsprite()
-    {
-        if (rb.linearVelocityX < -0.1f)
-        {
-            sr.flipX = false;
-        }
 
-        if (rb.linearVelocityX > 0.1f)
-        {
-            sr.flipX = true;
-        }
-    }
 
     public bool RayCollisionCheck(float xoffs, float yoffs)
     {

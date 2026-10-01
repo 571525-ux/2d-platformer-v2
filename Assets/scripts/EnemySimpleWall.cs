@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class NewMonoBehaviourScript : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class NewMonoBehaviourScript : MonoBehaviour
     SpriteRenderer sr;
     Animator anim;
     float dirX;
+
+    HelperScript helper;
+    //HelperFlip flip;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -18,14 +22,18 @@ public class NewMonoBehaviourScript : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         dirX = 2;
         anim = GetComponent<Animator>(); // ***
-        bool walkingE = true;
+
+        helper = gameObject.AddComponent<HelperScript>();
+
+
+        //flip = gameObject.AddComponent<HelperFlip>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        
 
 
         isGroundedMiddle = RayCollisionCheck(0, 0, Vector2.down);
@@ -68,20 +76,8 @@ public class NewMonoBehaviourScript : MonoBehaviour
         rb.linearVelocityX = dirX;
 
         //isGrounded will contain TRUE if the ray hits something on the 'Ground' layer
-        Flipsprite();
+        helper.FlipSprite();
 
-    }
-    void Flipsprite()
-    {
-        if (dirX < -0.1f)
-        {
-            sr.flipX = true;
-        }
-
-        if (dirX > 0.1f)
-        {
-            sr.flipX = false;
-        }
     }
 
     public bool RayCollisionCheck(float xoffs, float yoffs, Vector2 direction )
